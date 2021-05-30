@@ -132,39 +132,5 @@ public class ProductController {
 		return "forward:/product/listProduct.jsp";
 	}
 	
-	/*
-	@RequestMapping("/listSale") ==> Purchase컨트롤러로 옮기기
-	public String listSale( @ModelAttribute("search") Search search , Model model , HttpServletRequest request) throws Exception{
-		
-		System.out.println("/listSale.do");		
-		
-		System.out.println("search 검색어 : "+search.getSearchKeyword());
-		System.out.println("search 검색조건 : "+search.getSearchCondition());
-		
-		if(search.getCurrentPage() ==0 ){
-			search.setCurrentPage(1);
-		}
-		search.setPageSize(pageSize);
-		
-		// Business logic 수행
-		Map<String , Object> map=productService.getSaleList(search);
-		
-		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
-		System.out.println(resultPage);
-		
-		// Model 과 View 연결
-		model.addAttribute("list", map.get("list"));
-		model.addAttribute("resultPage", resultPage);
-		model.addAttribute("search", search);
-		
-		return "forward:/purchase/listSale.jsp";
-	}
-	
-	@RequestMapping(value="/deleteProduct/{prodNo}", method.RequestMethod.GET)
-	public String deleteProduct() {
-	
-	}
-	*/
-	
 	
 }
