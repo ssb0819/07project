@@ -8,6 +8,7 @@
 
 <%
 Product product = (Product)request.getAttribute("product");
+System.out.println(product.getFilename);
 %>	    
 --%>
     
@@ -73,11 +74,11 @@ Product product = (Product)request.getAttribute("product");
 	</tr>
 	<tr>
 		<td width="104" class="ct_write">
-			상품이미지
+			상품이미지<img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
 		</td>
 		<td bgcolor="D6D6D6" width="1"></td>
 		<td class="ct_write01">
-			${ product.fileName }<img src = "/images/uploadFiles/../../images/empty.GIF"/>
+			<img src = "/images/uploadFiles/${ product.fileName }" height="200" width="200" />
 		</td>
 	</tr>
 	<tr>
@@ -131,7 +132,7 @@ Product product = (Product)request.getAttribute("product");
 						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01"	style="padding-top: 3px;">				
-						<a href="/purchase/addPurchaseView/${ product.prodNo }">구매</a>					
+						<a href="/addPurchaseView.do?prodNo=${ product.prodNo }">구매</a>					
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
@@ -155,7 +156,7 @@ Product product = (Product)request.getAttribute("product");
 						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01"	style="padding-top: 3px;">			
-						<a href="/purchase/listSale?currentPage=${ param.currentPage }">확인</a>			
+						<a href="/listSale.do?currentPage=${ param.currentPage }">확인</a>			
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>

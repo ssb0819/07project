@@ -16,12 +16,12 @@
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
 <script type="text/javascript">
-<!--
+
 function fncGetList(currentPage){
 	document.getElementById("currentPage").value = currentPage;
 	document.detailForm.submit();
 }
--->
+
 </script>
 </head>
 
@@ -113,7 +113,7 @@ function fncGetList(currentPage){
 		<tr class="ct_list_pop">
 			<td align="center">
 				<c:if test="${!empty purchase.tranCode }">
-					<a href="/product/getPurchase?tranNo=${purchase.tranNo}&menu=manage&currentPage=${search.currentPage}">${i}</a>
+					<a href="/purchase/getPurchase?tranNo=${purchase.tranNo}&menu=manage&currentPage=${search.currentPage}">${i}</a>
 				</c:if>
 				<c:if test="${empty purchase.tranCode }">
 					${i}
@@ -124,7 +124,7 @@ function fncGetList(currentPage){
 			<td></td>
 			<td align="left">
 				<c:if test="${empty purchase.tranCode }">
-					<a href="/product/updateProduct?prodNo=${purchase.purchaseProd.prodNo}&currentPage=${search.currentPage}">${purchase.purchaseProd.prodName}</a>
+					<a href="/product/updateProduct/${purchase.purchaseProd.prodNo}/${search.currentPage}">${purchase.purchaseProd.prodName}</a>
 				</c:if>
 				<c:if test="${!empty purchase.tranCode }">
 					${purchase.purchaseProd.prodName}
