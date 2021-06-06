@@ -3,7 +3,6 @@ package com.model2.mvc.web.product;
 import java.net.URLEncoder;
 import java.util.Map;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.CookieGenerator;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
@@ -64,19 +64,27 @@ public class ProductController {
 		return "forward:/product/addProduct.jsp";
 	}
 	
-	@RequestMapping(value="/getProduct", method=RequestMethod.GET)
+	@RequestMapping(value="/getProduct")
 	public String getProduct( @RequestParam("prodNo") int prodNo , Model model, HttpServletResponse response ) throws Exception {
 		
-		System.out.println("/getProduct : GET");
+		System.out.println("/getProduct");
 		//Business Logic
 		Product product = productService.getProduct(prodNo);
 		// Model 과 View 연결
 		model.addAttribute("product", product);
 		
+		/*Spring 사용하면서 변경
 		Cookie cookie = new Cookie("history"+prodNo, URLEncoder.encode(product.getProdName()));
 		cookie.setMaxAge(-1);
 		response.addCookie(cookie);
 		System.out.println("history=prodNo 쿠키 저장완료 : "+cookie);	
+		*/
+		
+		CookieGenerator cookie = new CookieGenerator();
+	    cookie.setCookieName("history"+prodNo);
+	    cookie.addCookie(response, URLEncoder.encode(product.getProdName()));
+	    cookie.setCookieMaxAge(-1);
+	    System.out.println("history=prodNo 쿠키 저장완료 : "+cookie);
 				
 		return "forward:/product/getProduct.jsp";
 	}
@@ -101,7 +109,7 @@ public class ProductController {
 		//Business Logic
 		productService.updateProduct(product);
 		
-		return "forward:/getProduct.do?prodNo="+product.getProdNo()+"&menu=manage";
+		return "forward:/product/getProduct";
 	}
 	
 	
@@ -130,6 +138,19 @@ public class ProductController {
 		model.addAttribute("search", search);
 		
 		return "forward:/product/listProduct.jsp";
+	}
+	
+	@RequestMapping("/deleteProduct/{prodNo}")
+	public String deleteProduct(@PathVariable int prodNo , Model model) throws Exception{
+		
+		System.out.println("/deleteProduct 시작 / prodNo : "+prodNo);
+		
+		//DB에서 상품정보 삭제
+		productService.deleteProduct(prodNo);
+		
+		System.out.println("/deleteProduct 완료");
+		
+		return "redirect:/purchase/listSale?menu=manage";
 	}
 	
 	
