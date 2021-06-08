@@ -58,7 +58,16 @@
 	   :: Interceptor 선언 : 로그인 유무확인.
 	<bean id="logonCheckInterceptor"	class="com.model2.mvc.common.web.LogonCheckInterceptor" />
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->		           
-
+	
+	<!-- /////////////// file upload 위해 추가한 부분////////////// -->
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8"/>
+        <property name="maxUploadSize" value="52428800"/> <!-- 50MB -->
+        <property name="maxInMemorySize" value="1048576"/> <!-- 1MB -->
+	</bean>
+	
+	<!-- //////////////////////////////////////////////////////// -->
 
 	<!--  :: ViewResolver 선언 -->	
     <bean id="viewResolver"

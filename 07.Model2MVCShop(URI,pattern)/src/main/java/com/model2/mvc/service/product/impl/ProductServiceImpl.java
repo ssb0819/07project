@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.model2.mvc.common.Search;
+import com.model2.mvc.common.UploadFile;
 import com.model2.mvc.service.domain.Product;
 import com.model2.mvc.service.product.ProductService;
 import com.model2.mvc.service.product.ProductDao;
@@ -30,9 +31,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public void addProduct(Product productVO) throws Exception {
-		// TODO Auto-generated method stub
-		productDao.insertProduct(productVO);	
+	public int addProduct(Product product) throws Exception {
+		// TODO Auto-generated method stub			
+		return productDao.insertProduct(product);
 	}
 
 	@Override
@@ -64,6 +65,12 @@ public class ProductServiceImpl implements ProductService {
 	public void deleteProduct(int prodNo) throws Exception {
 		// TODO Auto-generated method stub
 		productDao.deleteProduct(prodNo);
+	}
+
+	@Override
+	public void addFile(List<UploadFile> fileList) throws Exception {
+		// TODO Auto-generated method stub
+		productDao.insertFile(fileList);
 	}		
 
 }

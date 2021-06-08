@@ -32,7 +32,7 @@
 		SELECT
 		user_id , user_name , password , role ,  cell_phone ,  addr , email , reg_date 		
 		FROM users 
-		WHERE user_id = #{value}
+		WHERE user_id = #{value} AND role != 'deleted'
 	 </select>
 	 
 	 <!-- SQL : UPDATE -->
@@ -55,11 +55,12 @@
 											FROM users
 											<if test="searchCondition != null">
 												<where>
+													 role != 'deleted'
 													<if test="searchCondition == 0 and searchKeyword !='' ">
-										 				user_id = #{searchKeyword}
+										 				AND user_id = #{searchKeyword}
 													</if>
 													<if test="searchCondition == 1 and searchKeyword !='' ">
-										 				user_name = #{searchKeyword}
+										 				AND user_name = #{searchKeyword}
 													</if>
 												</where>
 											</if>
@@ -94,5 +95,18 @@
 							</where>
 						</if> ) countTable						
 	 </select>
+	 
+	 <update	id="deleteUser"	parameterType="string" >
+	   	UPDATE users
+	   	<set>
+	   		role='deleted', 
+	   		ssn=NULL, 
+	   		cell_phone=NULL, 
+	   		addr=NULL,
+	   		email=NULL, 
+	   		del_date=SYSDATE
+	   	</set>
+	   	WHERE user_id = #{userId}
+	 </update>
 	 
 </mapper>

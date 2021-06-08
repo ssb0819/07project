@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.model2.mvc.common.Search;
+import com.model2.mvc.common.UploadFile;
 import com.model2.mvc.service.domain.Product;
 import com.model2.mvc.service.product.ProductDao;
 
@@ -40,9 +41,10 @@ public class ProductDaoImpl implements ProductDao {
 	}
 
 	@Override
-	public void insertProduct(Product product) throws Exception {
+	public int insertProduct(Product product) throws Exception {
 		// TODO Auto-generated method stub
-		sqlSession.insert("ProductMapper.insertProduct", product);
+		sqlSession.insert("ProductMapper.insertProduct", product);		
+		return sqlSession.selectOne("ProductMapper.findProdNo");	
 	}
 
 	@Override
@@ -61,6 +63,14 @@ public class ProductDaoImpl implements ProductDao {
 	public int getTotalCount(Search search) throws Exception {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("ProductMapper.getTotalCount", search);
+	}
+
+	@Override
+	public void insertFile(List<UploadFile> fileList) throws Exception {
+		// TODO Auto-generated method stub
+		for(UploadFile uploadFile : fileList) {
+			sqlSession.insert("ProductMapper.insertFile", uploadFile);
+		}
 	}
 
 }

@@ -1,8 +1,13 @@
 package com.model2.mvc.web.product;
 
+import java.io.File;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,10 +21,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.CookieGenerator;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
+import com.model2.mvc.common.UploadFile;
 import com.model2.mvc.service.domain.Product;
 import com.model2.mvc.service.product.ProductService;
 
@@ -34,6 +41,10 @@ public class ProductController {
 	@Qualifier("productServiceImpl")
 	private ProductService productService;
 	//setter Method 구현 않음
+	
+	@Autowired
+    ServletContext servletContext;
+	
 		
 	public ProductController(){
 		System.out.println(this.getClass());
@@ -49,9 +60,9 @@ public class ProductController {
 	//@Value("#{commonProperties['pageSize'] ?: 2}")
 	int pageSize;
 	
-	
+	/*
 	@RequestMapping(value="/addProduct", method=RequestMethod.POST)
-	public String addProduct( @ModelAttribute("product") Product product, Model model ) throws Exception {
+	public String addProduct( @ModelAttribute("product") Product product, UploadFile uploadfile ,Model model ) throws Exception {
 
 		System.out.println("/addProduct : POST");
 		String tempManuDate = product.getManuDate().replaceAll("-", "");
@@ -59,10 +70,57 @@ public class ProductController {
 		
 		//Business Logic
 		productService.addProduct(product);
+		System.out.println();
 		model.addAttribute(product);
 		
 		return "forward:/product/addProduct.jsp";
 	}
+	*/
+	
+	///*
+	@RequestMapping(value="/addProduct", method=RequestMethod.POST)
+	public String addProduct( @RequestParam("thumbnail") MultipartFile file,
+								@RequestParam("uploadFile") MultipartFile[] files,
+								@ModelAttribute("product") Product product, Model model ) throws Exception {
+
+		System.out.println("/addProduct : POST");
+		
+		String tempManuDate = product.getManuDate().replaceAll("-", "");
+		product.setManuDate(tempManuDate);
+		product.setFileName("thumbnail_"+file.getOriginalFilename());
+		int prodNo = productService.addProduct(product);
+				
+		String realPath = servletContext.getRealPath("/resources/upload");
+        String saveFolder = realPath + File.separator + prodNo;
+        System.out.println(saveFolder);
+        
+        UploadFile uploadFile = null;
+         
+        File folder = new File(saveFolder);
+        if(!folder.exists()) {
+             folder.mkdirs();
+        }
+         
+        List<UploadFile> fileList = new ArrayList<UploadFile>();
+         
+        for (MultipartFile tmpfile : files) {
+        	uploadFile = new UploadFile();
+        	uploadFile.setProdNo(prodNo);
+            String originalFileName = tmpfile.getOriginalFilename();
+            if (!originalFileName.isEmpty()) {
+                String saveFileName = UUID.randomUUID().toString() + originalFileName.substring(originalFileName.lastIndexOf('.'));
+                uploadFile.setOriginFileName(originalFileName);
+                uploadFile.setSaveFileName(saveFileName);
+                System.out.println(tmpfile.getOriginalFilename() + "   " + saveFileName);
+                tmpfile.transferTo(new File(folder, saveFileName));
+             }
+            fileList.add(uploadFile);
+         }
+        productService.addFile(fileList);
+		
+		return "forward:/product/addProduct.jsp";
+	}
+	//*/
 	
 	@RequestMapping(value="/getProduct")
 	public String getProduct( @RequestParam("prodNo") int prodNo , Model model, HttpServletResponse response ) throws Exception {
